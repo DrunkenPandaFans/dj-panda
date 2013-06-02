@@ -33,3 +33,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Ninja IDE & Python pyc or pyo
+*.pyc
+*pyo
+__pycahe__
+manager.nja
