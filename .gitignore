@@ -37,3 +37,7 @@ nosetests.xml
 # Ninja IDE
 __pycahe__
 manager.nja
+
+# Sublime Text
+.sublime-project
+.sublime-workspace
