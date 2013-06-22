@@ -22,7 +22,7 @@ echo ""
 if test ! $(which pip)
 then
   echo " x You need to install pip. If you are on Ubuntu, run this:"
-  echo "   easy_install install pip"
+  echo "   apt-get install python-pip"
   exit
 else
   echo " + Pip was found."
