@@ -8,10 +8,10 @@ class Loader(object):
     and prepare them to insert in database
     """
 
-    def __init__(self,path):
-        self.songs = []
-        self.load_songs_from_dir(path)
+    def __init__(self, path):
+        self.songs = self.load_songs_from_dir(path)
 
+    @classmethod
     def load_dir(self, path):
         """
         Load directory
@@ -21,6 +21,7 @@ class Loader(object):
         """
         return os.walk(path)
 
+    @classmethod
     def load_songs_from_dir(self, path):
         """
         Examine files from path
@@ -28,9 +29,12 @@ class Loader(object):
 
         @return: return path to files in directory
         """
+        songs = []
         for item in self.load_dir(path):
             for name in item[2]:
-                self.songs.append(item[0] + '/' + name)
+                songs.append(item[0] + '/' + name)
+
+        return songs
 
     def get_songs(self):
         """
@@ -38,4 +42,5 @@ class Loader(object):
         @return: list of songs
         """
         return self.songs
+
 
