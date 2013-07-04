@@ -2,6 +2,7 @@
 
 import os
 
+
 class Loader(object):
     """
     class for load directory with audio files
@@ -9,7 +10,7 @@ class Loader(object):
     """
 
     def __init__(self, path):
-        self.songs = self.load_songs_from_dir(path)
+        self.songs = self.load_audio_files_from_dir(path)
 
     @classmethod
     def load_dir(self, path):
@@ -22,7 +23,7 @@ class Loader(object):
         return os.walk(path)
 
     @classmethod
-    def load_songs_from_dir(self, path):
+    def load_audio_files_from_dir(self, path):
         """
         Examine files from path
         @param path: path to directory
@@ -36,11 +37,9 @@ class Loader(object):
 
         return songs
 
-    def get_songs(self):
+    def get_audio_files(self):
         """
         Get list of songs
         @return: list of songs
         """
         return self.songs
-
-
