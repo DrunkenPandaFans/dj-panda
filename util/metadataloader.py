@@ -1,15 +1,35 @@
 # -*- coding: utf-8 -*-
 
-
 import mutagen.mp3
-from loader import Loader
 
 
 class MetaDataLoader(object):
 
     def __init__(self):
-        self.metadata = {}
-        self.load = {'mp3': self.load_mp3_metadata}
+        self.metadata = []
+        self.load = {'mp3': self.load_mp3_metadata,
+                     'wav': self.load_wav_metadata,
+                     'ogg': self.load_ogg_metadata}
+
+    def load_ogg_metadata(self, _file):
+        """
+        Ogg metadata loader
+
+        @param _file: ogg file
+
+        @return: return metadata (album, genre, length, artist, title)
+        """
+        pass
+
+    def load_wav_metadata(self, _file):
+        """
+        Wav metadata loader
+
+        @param _file: wav file
+
+        @return: return metadata (album, genre, length, artist, title)
+        """
+        pass
 
     def load_mp3_metadata(self, _file):
         """
@@ -17,14 +37,24 @@ class MetaDataLoader(object):
 
         @param _file: mp3 file
 
-        @return: return metadata (album, genre, length, artist, title)
+        @return: return metadata (path, album, genre, length, artist, title)
         """
+        metadata = {}
+        metadata['path'] = _file
+
         info = mutagen.mp3.Open(_file)
-        metadata = []
+
         for item in info.keys():
-            #TODO
-            #metadata.append(info.tags['TALB'].text[0])
-            pass
+            if info.tags.get('TALB') is not None:
+                metadata['album'] = info.tags['TALB']
+            if info.tags.get('TCON') is not None:
+                metadata['genre'] = info.tags['TCON']
+            if info.tags.get('TLEN') is not None:
+                metadata['length'] = info.tags['TLEN']
+            if info.tags.get('TPE1') is not None:
+                metadata['artist'] = info.tags['TPE1']
+            if info.tags.get('TIT2') is not None:
+                metadata['title'] = info.tags['TIT2']
 
         return metadata
 
@@ -33,23 +63,20 @@ class MetaDataLoader(object):
         Iterate audio files and load metadata from different audio files
 
         @param audio_files: list of audio files
-
-        @return: return dictionary, key is audio file path,
-                 value is list of metadata
         """
         for _file in audio_files:
             try:
                 audio_type = _file[_file.rfind('.') + 1:]
-                self.metadata[_file] = self.load[audio_type](_file)
+                self.metadata.append(self.load[audio_type](_file))
             except mutagen.mp3.HeaderNotFoundError:
-                print(_file + " Header is empry ")
+                print(_file + " Header is empty ")
             except KeyError:
                 print(_file + " Not supported audio format")
 
     def get_metadata(self):
         """
-        Get dictionary
+        Get a list of songs metadata
 
-        @return: return dictionary
+        @return: return list
         """
         return self.metadata
