@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import mutagen.mp3
+import mutagen.oggvorbis
 
 
 class MetaDataLoader(object):
@@ -17,19 +18,26 @@ class MetaDataLoader(object):
 
         @param _file: ogg file
 
-        @return: return metadata (album, genre, length, artist, title)
+        @return: return metadata (path, album, genre, length, artist, title)
         """
-        pass
+        metadata = {}
+        metadata['path'] = _file
 
-    def load_wav_metadata(self, _file):
-        """
-        Wav metadata loader
+        info = mutagen.oggvorbis.Open(_file)
 
-        @param _file: wav file
+        if info.tags.get('album') is not None:
+            metadata['album'] = info.tags['album'][0]
+        if info.tags.get('genre') is not None:
+            metadata['genre'] = info.tags['genre'][0]
 
-        @return: return metadata (album, genre, length, artist, title)
-        """
-        pass
+        metadata['length'] = info.info.length
+
+        if info.tags.get('artist') is not None:
+            metadata['artist'] = info.tags['artist'][0]
+        if info.tags.get('title') is not None:
+            metadata['title'] = info.tags['title'][0]
+
+        return metadata
 
     def load_mp3_metadata(self, _file):
         """
@@ -44,17 +52,17 @@ class MetaDataLoader(object):
 
         info = mutagen.mp3.Open(_file)
 
-        for item in info.keys():
-            if info.tags.get('TALB') is not None:
-                metadata['album'] = info.tags['TALB']
-            if info.tags.get('TCON') is not None:
-                metadata['genre'] = info.tags['TCON']
-            if info.tags.get('TLEN') is not None:
-                metadata['length'] = info.tags['TLEN']
-            if info.tags.get('TPE1') is not None:
-                metadata['artist'] = info.tags['TPE1']
-            if info.tags.get('TIT2') is not None:
-                metadata['title'] = info.tags['TIT2']
+        if info.tags.get('TALB') is not None:
+            metadata['album'] = info.tags['TALB']
+        if info.tags.get('TCON') is not None:
+            metadata['genre'] = info.tags['TCON']
+
+        metadata['length'] = info.info.length
+
+        if info.tags.get('TPE1') is not None:
+            metadata['artist'] = info.tags['TPE1']
+        if info.tags.get('TIT2') is not None:
+            metadata['title'] = info.tags['TIT2']
 
         return metadata
 
@@ -70,6 +78,8 @@ class MetaDataLoader(object):
                 self.metadata.append(self.load[audio_type](_file))
             except mutagen.mp3.HeaderNotFoundError:
                 print(_file + " Header is empty ")
+            except mutagen.oggvorbis.OggVorbisHeaderError:
+                print(_file + "Header is wrong")
             except KeyError:
                 print(_file + " Not supported audio format")
 
@@ -80,3 +90,4 @@ class MetaDataLoader(object):
         @return: return list
         """
         return self.metadata
+
