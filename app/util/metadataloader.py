@@ -4,12 +4,15 @@ import mutagen.mp3
 import mutagen.oggvorbis
 
 
+class WrongHeaderException(Exception):
+    pass
+
+
 class MetaDataLoader(object):
 
     def __init__(self):
         self.metadata = []
         self.load = {'mp3': self.load_mp3_metadata,
-                     'wav': self.load_wav_metadata,
                      'ogg': self.load_ogg_metadata}
 
     def load_ogg_metadata(self, _file):
@@ -34,8 +37,12 @@ class MetaDataLoader(object):
 
         if info.tags.get('artist') is not None:
             metadata['artist'] = info.tags['artist'][0]
+        else:
+            raise WrongHeaderException("Artist tag is required!")
         if info.tags.get('title') is not None:
             metadata['title'] = info.tags['title'][0]
+        else:
+            raise WrongHeaderException("Title tag is required!")
 
         return metadata
 
@@ -61,8 +68,12 @@ class MetaDataLoader(object):
 
         if info.tags.get('TPE1') is not None:
             metadata['artist'] = info.tags['TPE1']
+        else:
+            raise WrongHeaderException("Artist tag is required!")
         if info.tags.get('TIT2') is not None:
             metadata['title'] = info.tags['TIT2']
+        else:
+            raise WrongHeaderException("Title tag is required!")
 
         return metadata
 
@@ -76,6 +87,8 @@ class MetaDataLoader(object):
             try:
                 audio_type = _file[_file.rfind('.') + 1:]
                 self.metadata.append(self.load[audio_type](_file))
+            except WrongHeaderException as err:
+                print(err)
             except mutagen.mp3.HeaderNotFoundError:
                 print(_file + " Header is empty ")
             except mutagen.oggvorbis.OggVorbisHeaderError:
