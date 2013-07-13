@@ -30,4 +30,3 @@ class Loader(object):
         @return: list of songs
         """
         return self.songs
-
