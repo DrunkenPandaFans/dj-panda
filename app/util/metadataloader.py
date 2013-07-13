@@ -8,12 +8,31 @@ class WrongHeaderException(Exception):
     pass
 
 
+class NotSupportedFileException(Exception):
+    pass
+
+
 class MetaDataLoader(object):
+    """
+    Metadata loader. Extract metadata from audio_files.
+    """
 
     def __init__(self):
         self.metadata = []
         self.load = {'mp3': self.load_mp3_metadata,
                      'ogg': self.load_ogg_metadata}
+
+    def load_metadata(self, _file):
+        """
+        Load metadata from files
+
+        @param _file: audio file
+        """
+        try:
+            audio_type = _file[_file.rfind('.') + 1:]
+            self.metadata.append(self.load[audio_type](_file))
+        except KeyError:
+            raise NotSupportedFileException(_file + " Not supported file!")
 
     def load_ogg_metadata(self, _file):
         """
@@ -85,16 +104,15 @@ class MetaDataLoader(object):
         """
         for _file in audio_files:
             try:
-                audio_type = _file[_file.rfind('.') + 1:]
-                self.metadata.append(self.load[audio_type](_file))
+                self.load_metadata(_file)
             except WrongHeaderException as err:
                 print(err)
             except mutagen.mp3.HeaderNotFoundError:
                 print(_file + " Header is empty ")
             except mutagen.oggvorbis.OggVorbisHeaderError:
-                print(_file + "Header is wrong")
-            except KeyError:
-                print(_file + " Not supported audio format")
+                print(_file + " Header is wrong")
+            except NotSupportedFileException as err:
+                print(err)
 
     def get_metadata(self):
         """
@@ -103,4 +121,3 @@ class MetaDataLoader(object):
         @return: return list
         """
         return self.metadata
-
