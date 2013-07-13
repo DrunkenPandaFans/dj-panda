@@ -7,6 +7,11 @@ try:
 except ImportError:
     print('Pymongo module is required')
 
+try:
+    import vlc
+except ImportError:
+    print('Vlc python binding is required')
+
 
 if __name__ == "__main__":
     test_loader = TestLoader()
