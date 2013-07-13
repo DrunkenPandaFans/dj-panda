@@ -17,8 +17,6 @@ class Loader(object):
         Examine files from path
 
         @param path: path to directory
-
-        @return: return path to files in directory
         """
 
         for item in os.walk(path):
