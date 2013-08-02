@@ -8,9 +8,9 @@ except ImportError:
     print('Pymongo module is required')
 
 try:
-    import vlc
+    import gst
 except ImportError:
-    print('Vlc python binding is required')
+    print('Gst python binding is required')
 
 
 if __name__ == "__main__":
