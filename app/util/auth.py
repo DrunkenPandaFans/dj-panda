@@ -12,13 +12,16 @@ class GitHubAuthenticator(object):
     self.access_token_url = access_token_url
 
   def retrieve_access_token(self, code):
-    """ Method retrieves access token to GitHub API
-        for provided code
+    """ 
+    Method retrieves access token to GitHub API
+    for provided code.
 
-        @param code - string sent by GitHub after user granted
-            access privileges to application
-        @return - access token, that can be used to 
-            access GitHub profile of user
+    @param code: code sent by GitHub after user granted
+       access privileges to application
+    @type code: str
+    @return: access token, that can be used to 
+       access GitHub profile of user
+    @rtype: str| None
     """
 
     if not code:
