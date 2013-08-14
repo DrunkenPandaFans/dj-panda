@@ -33,7 +33,7 @@ class Player:
         adder_src = self.adder.get_pad("src")
         adder_src.link(self.tee.get_pad("sink"))
 
-        outputbin = AlsaOutputBin()
+        outputbin = OutputBin()
         self.pipeline.add(outputbin)
         tee_src = self.tee.get_request_pad("src%d")
         tee_src.link(outputbin.get_pad("sink"))
