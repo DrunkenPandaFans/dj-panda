@@ -1,0 +1,10 @@
+// Example configuration of DJ Panda
+{
+  'mongo_login':'<Your MongoDB login>',
+  'mongo_password':'<Your MongoDB password>',
+  'mongo_url': 'localhost',
+  'mongo_port': 27017,
+  'github_client_id': '<Your id to GitHub API>',
+  'github_client_secret': '<Your most secret GitHub access key>',
+  'github_org': '<Name of your GitHub organization>',
+}
