@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE="config/config.properties"
+CONFIG_FILE="config/config.json"
 
 #
 # Script to setup your ultimate jukebox.
@@ -13,6 +13,12 @@ echo ""
 
 echo "But first you have to do little bit of work."
 echo ""
+
+if [ -f $CONFIG_FILE ]
+then
+  echo " + Panda is already configured. You can find your configuration in $CONFIG_FILE" 
+  exit 0
+fi
 
 #
 # Do some magic setup here.
@@ -123,14 +129,16 @@ fi
 echo ""
 echo "Saving application configuration..."
 
-echo "GITHUB_CLIENT_ID=" $GITHUB_CLIENT_ID >> $CONFIG_FILE
-echo "GITHUB_CLIENT_SECRET=" $GITHUB_CLIENT_SECRET >> $CONFIG_FILE
-echo "GITHUB_ORG=" $GITHUB_ORG >> $CONFIG_FILE
+echo "{" >> $CONFIG_FILE
+echo "'github_client_id': '$GITHUB_CLIENT_ID'," >> $CONFIG_FILE
+echo "'github_client_secret': '$GITHUB_CLIENT_SECRET'," >> $CONFIG_FILE
+echo "'github_org': '$GITHUB_ORG'," >> $CONFIG_FILE
 
-echo "MONGO_LOGIN=" $MONGO_LOGIN >> $CONFIG_FILE
-echo "MONGO_PASSWORD=" $MONGO_PASSWORD >> $CONFIG_FILE
-echo "MONGO_URL=localhost" >> $CONFIG_FILE
-echo "MONGO_PORT=27017" >> $CONFIG_FILE
+echo "'mongo_login': '$MONGO_LOGIN'," >> $CONFIG_FILE
+echo "'mongo_password': '$MONGO_PASSWORD'," >> $CONFIG_FILE
+echo "'mongo_url': 'localhost',"  >> $CONFIG_FILE
+echo "'mongo_port': 27017" >> $CONFIG_FILE
+echo "}" >> $CONFIG_FILE
 
 if [ $? -eq 0 ]
 then
