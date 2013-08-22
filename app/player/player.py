@@ -7,7 +7,7 @@ import logging
 
 from playlist import *
 from bins.sourcebin import SourceBin
-from bins.alsaoutputbin import AlsaOutputBin
+from bins.outputbin import OutputBin
 from bins.silencebin import SilenceBin
 
 
