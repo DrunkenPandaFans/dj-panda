@@ -31,14 +31,14 @@ class GitHubAuthenticator(object):
         params = {"client_id": self.client_id,
                   "client_secret": self.client_secret,
                   "code": code }
-        paramsJson = json.dump(params)
+        paramsJson = json.dumps(params)
 
         headers = {"Content-Type": "application/json",
                    "Accept": "application/json" }
 
         access_response = requests.post(self.access_token_url,
             data=paramsJson, headers=headers)
-        if access_response.status != 200:
+        if access_response.status_code != 200:
             #TODO raise exception
             return ""
 
