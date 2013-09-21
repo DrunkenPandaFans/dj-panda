@@ -88,7 +88,7 @@ read GITHUB_CLIENT_SECRET
 echo "Do you want to log in users from your organization?[Y/n]"
 read LOG_ORG
 
-if [ "$LOG_ORG" == "y" ] || [ "$LOG_ORG" == "Y" ]
+if [ "$LOG_ORG" = "y" ] || [ "$LOG_ORG" = "Y" ]
 then 
   echo "What is name of your organization?"
   read GITHUB_ORG
@@ -143,7 +143,7 @@ echo "}" >> $CONFIG_FILE
 if [ $? -eq 0 ]
 then
   echo ""
-  echo " + Application configuration was saved to 'config/config.properties"
+  echo " + Application configuration was saved to 'config/config.json"
   echo ""
 else
   echo ""
