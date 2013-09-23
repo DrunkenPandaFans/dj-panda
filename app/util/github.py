@@ -16,10 +16,23 @@ class GitHub(object):
   def get_user_info(self, access_token):
     if not access_token:
       return {}
-    headers = self._prepare_headers()
     url = self.__API_URL + "user"
-
     params = {"access_token": access_token}
+
+    return self._process_request(url, params)
+
+
+  def get_user_orgs(self, access_token):
+    if not access_token:
+      return {}
+    url = self.__API_URL + "user/orgs"
+    params = {"access_token": access_token}
+
+    return self._process_request(url, params)
+
+
+  def _process_request(self, url, params):
+    headers = self._prepare_headers()
 
     response = requests.get(url, params=params, headers=headers)
     if response.status_code != 200:
