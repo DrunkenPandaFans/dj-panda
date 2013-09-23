@@ -3,6 +3,36 @@
 import json
 import requests
 
+
+class GitHub(object):
+
+  __API_URL = "https://api.github.com/"
+
+  def __init__(self, client_id, client_secret):
+    self.client_id = client_id
+    self.client_secret = client_secret
+
+
+  def get_user_info(self, access_token):
+    if not access_token:
+      return {}
+    headers = self._prepare_headers()
+    url = self.__API_URL + "user"
+
+    params = {"access_token": access_token}
+
+    response = requests.get(url, params=params, headers=headers)
+    if response.status_code != 200:
+      print "response code is %d" % response.status_code
+      return {}
+
+    result = response.json()
+    return result
+  
+  def _prepare_headers(self):
+    return {"Accept": "application/json"}
+
+
 class GitHubAuthenticator(object):
     """ Class provides OAuth authentization via GitHub API"""
 
