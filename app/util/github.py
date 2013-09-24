@@ -5,7 +5,9 @@ import requests
 
 
 class GitHub(object):
+  """ Class provides access to various GitHub API services """
 
+  """ Base GitHub API url """
   __API_URL = "https://api.github.com/"
 
   def __init__(self, client_id, client_secret):
@@ -14,6 +16,15 @@ class GitHub(object):
 
 
   def get_user_info(self, access_token):
+    """
+    Method gets user profile info from GitHub.
+    If access_token is None, empty dict is returned.
+
+    @param access_token: Token used to access users Github profile
+    @type access_token: String
+    @return: users profile info
+    @rtype: dict
+    """
     if not access_token:
       return {}
     url = self.__API_URL + "user"
@@ -23,6 +34,15 @@ class GitHub(object):
 
 
   def get_user_orgs(self, access_token):
+    """
+    Method retrieves user's organizations from GitHub.
+    If access_token is None, empty list is returned.
+
+    @param access_token: Token used to access users GitHub profile
+    @type access_token: String
+    @return: list of users organizations
+    @rtype: list of dict
+    """
     if not access_token:
       return {}
     url = self.__API_URL + "user/orgs"
@@ -32,6 +52,21 @@ class GitHub(object):
 
 
   def _process_request(self, url, params):
+    """
+    Method processes request to given url
+    and returns parsed JSON results.
+
+    @param url: Url, that is queried
+    @type url: String
+    @param params: Query parameters of request
+    @type params: dict
+    @return: Parsed JSON response
+    @rtype: dict
+    """
+
+    if not url:
+      return {}
+
     headers = self._prepare_headers()
 
     response = requests.get(url, params=params, headers=headers)
@@ -41,8 +76,14 @@ class GitHub(object):
 
     result = response.json()
     return result
-  
+ 
+
   def _prepare_headers(self):
+    """
+    Method prepares HTTP header for GitHub Api requests.
+    @return dictionary with HTTP header properties
+    @rtype: dict
+    """
     return {"Accept": "application/json"}
 
 
