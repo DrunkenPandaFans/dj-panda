@@ -1,4 +1,4 @@
-dj-panda
+dj-panda [![Build Status](https://travis-ci.org/DrunkenPandaFans/dj-panda.png?branch=master)](https://travis-ci.org/DrunkenPandaFans/dj-panda)
 ========
 
 Server for sharing, listening and freaking out about music.
