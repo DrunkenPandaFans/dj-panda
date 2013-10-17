@@ -13,7 +13,7 @@ class TestLoader(unittest.TestCase):
     def test_load_audio_files_from_dir(self):
         self.loader.load_audio_files_from_dir(self.path)
 
-        self.assertEqual(5, len(self.loader.songs))
+        self.assertEqual(2, len(self.loader.songs))
 
     def test_get_audio_files(self):
         audio_files = self.loader.get_audio_files()
