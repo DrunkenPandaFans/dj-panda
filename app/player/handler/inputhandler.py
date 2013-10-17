@@ -4,7 +4,10 @@ import gtk
 import gst
 import gobject
 
+import logging
+
 from bins.silencebin import SilenceBin
+from bins.songbin import SongBin
 
 
 class InputHandler:
@@ -13,31 +16,47 @@ class InputHandler:
         self.player = player
 
     def link(self):
-        if not self.player.status:
-            self._link_silence()
+        #TODO aktualizovat po uprave playlistu
+        self.player.song_bin = SongBin(self.player.song_path)
+
+        self.player.pipeline.add(self.song_bin)
+        self.player.adder_song_sink = self.player.adder.get_request_pad("sink%d")
+
+        self.player.song_bin.get_pad("src").link(self.player.adder_song_sink)
+        self.player.song_bin.set_state(gst.STATE_PLAYING)
+
+        self._unlink_silence()
+
+
 
     def unlink(self):
-        pass
+        self._link_silence()
+
+        self.player.song_bin.set_state(gst.STATE_NULL)
+
+        self.player.song_bin.get_pad("src").unlink(self.player.adder_song_sink)
+        self.player.pipeline.remove(self.player.song_bin)
+
+        self.player.song_bin = None
+        self.player.adder_song_sink = None
 
     def _link_silence(self):
         if self.player.adder_silence_sink:
-            return False
+            pass
 
         self.player.silence_bin = SilenceBin()
-
         self.player.pipeline.add(self.silence_bin)
 
         self.player.adder_silence_sink = self.player.adder.get_request_pad("sink%d")
 
         self.player.silence_bin.get_pad("src").link(self.player.adder_silence_sink)
-
         self.player.silence_bin.set_state(gst.STATE_PLAYING)
 
         return True
 
     def _unlink_silence(self):
         if not self.player.adder_silence_sink:
-            return False
+            pass
 
         self.player.silence_bin.set_state(gst.STATE_NULL)
 
