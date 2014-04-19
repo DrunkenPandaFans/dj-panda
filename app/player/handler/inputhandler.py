@@ -11,15 +11,21 @@ from bins.songbin import SongBin
 
 
 class InputHandler:
+    """
+    Class to handle link and unlink song bins
+    """
 
     def __init__(self,player):
         self.player = player
 
-    def link(self):
+    """
+    Method creates song bin and links them into pipeline. Then unlinks silence bin
+    """
+    def link(self,song_path):
         #TODO aktualizovat po uprave playlistu
-        self.player.song_bin = SongBin(self.player.song_path)
+        self.player.song_bin = SongBin(song_path)
 
-        self.player.pipeline.add(self.song_bin)
+        self.player.pipeline.add(self.player.song_bin)
         self.player.adder_song_sink = self.player.adder.get_request_pad("sink%d")
 
         self.player.song_bin.get_pad("src").link(self.player.adder_song_sink)
@@ -27,8 +33,9 @@ class InputHandler:
 
         self._unlink_silence()
 
-
-
+    """
+    Method links silence bin and remove song bin from pipeline
+    """
     def unlink(self):
         self._link_silence()
 
@@ -40,12 +47,15 @@ class InputHandler:
         self.player.song_bin = None
         self.player.adder_song_sink = None
 
+    """
+    Method creates silence bin and links them into pipeline.
+    """
     def _link_silence(self):
         if self.player.adder_silence_sink:
             pass
 
         self.player.silence_bin = SilenceBin()
-        self.player.pipeline.add(self.silence_bin)
+        self.player.pipeline.add(self.player.silence_bin)
 
         self.player.adder_silence_sink = self.player.adder.get_request_pad("sink%d")
 
@@ -54,6 +64,9 @@ class InputHandler:
 
         return True
 
+    """
+    Method unlinks silence bin
+    """
     def _unlink_silence(self):
         if not self.player.adder_silence_sink:
             pass
